@@ -63,17 +63,18 @@ if (ss >> buf) {
     exit(1);
 }
 
-if (ss >> buf) {
-next_start = atof(buf.c_str());
-} else {
-std::cerr << "couldn't get start from " << line << "\n";
-exit(1);
-}
 
 if (ss >> buf) {
 next_num_bytes = atoi(buf.c_str());
 } else {
 std::cerr << "couldn't get num_bytes from " << line << "\n";
+exit(1);
+}
+
+if (ss >> buf) {
+next_start = atof(buf.c_str());
+} else {
+std::cerr << "couldn't get start from " << line << "\n";
 exit(1);
 }
 
