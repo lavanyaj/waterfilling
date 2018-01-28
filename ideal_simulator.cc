@@ -324,7 +324,7 @@ void IdealSimulator::run() {
  double next_event_time = next_start;
 
  int num_events = 0;
- while ((next_start > 0 or next_finish > 0) and num_events < 50000) {
+ while ((next_start > 0 or next_finish > 0) and num_events < 500000) {
    num_events++;
    // see which event to simulate first
    // adding new flow or removing an old flow
