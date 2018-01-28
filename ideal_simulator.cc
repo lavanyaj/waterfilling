@@ -178,7 +178,7 @@ void IdealSimulator::get_new_finish_times() {
 	rates.at(f.first) <= 0) {
       std::cerr << "invalid rate for flow " << f.first << std::endl;
     }
-    if (f.second <= 0) {
+    if (f.second < -1e-6) {
       std::cerr << "flow " << f.first << " has invalid bytes " 
 		<< f.second << std::endl;
     }
@@ -202,8 +202,12 @@ void IdealSimulator::get_new_finish_times() {
 
 void IdealSimulator::drain_active_flows(double dur) {
   if (dur <= 0) {
-    std::cerr << "invalid dur " << dur << std::endl;
-    exit(1);
+    std::cerr << "possibly invalid dur " << dur 
+	      << " at curr_time " << curr_time
+	      << " exit if < -1us"
+	      << std::endl;
+    if (dur < -1e-6) exit(1);
+    return;
   }
 
   std::vector<double> new_bytes_values;

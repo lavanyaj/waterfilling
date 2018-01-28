@@ -59,12 +59,12 @@ void WeightedWaterfilling::do_waterfilling(
 		std::map< int, double >& rates) {
   //std::unique_ptr<WeightedWaterfillingState> wfs(new WeightedWaterfillingState(flow_to_path));
   WeightedWaterfillingState wfs(flow_to_path, flow_to_weight); 
-  wfs.show();
+  //wfs.show();
   while (wfs.unsaturated_flows.size() > 0) {
     do_one_round_of_waterfilling(wfs);
     //    wfs.show();
   }
-  wfs.show();
+  //  wfs.show();
   for (auto f : wfs.rate_per_flow) {
     double weight = flow_to_weight.at(f.first);
     rates[f.first] = weight * f.second;
@@ -205,9 +205,9 @@ WeightedWaterfillingState::WeightedWaterfillingState(
  const std::map< int, double> &
  flow_to_weight) : flow_to_weight(flow_to_weight) {
   round = 0;
-  std::cout << "setting up wf state\n";
+  //std::cout << "setting up wf state\n";
   for (auto f : flow_to_path) {
-    std::cout << "flow " << f.first << "\n";
+    //std::cout << "flow " << f.first << "\n";
     unsaturated_flows.insert(f.first);
     double weight = flow_to_weight.at(f.first);
     rate_per_flow[f.first] = 0;
