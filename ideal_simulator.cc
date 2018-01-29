@@ -81,7 +81,7 @@ exit(1);
 int prev_node = -1;
 while (ss >> buf) {
 int node = atoi(buf.c_str());
-if (prev_node > 0) {
+if (prev_node >= 0) {
 next_path.push_back(std::make_pair(prev_node, node));
 }
 prev_node = node;
@@ -129,7 +129,25 @@ bool IdealSimulator::get_next_flow() {
   return false;
 }
 
+void IdealSimulator::log_rates() {
+     std::cout << "at time " << curr_time << " " 
+	       << active_flow_paths.size() << " active flows total \n";
+     int af_uplink_0 = 0;
+     for (auto f : rates) {
+       int src = active_flow_paths.at(f.first).front().first;
+       std::cout << "at time " << curr_time << " rate of flow " 
+		 << f.first << " is " << f.second 
+		 << " bytes " << active_flow_bytes.at(f.first) 
+		 << " out of " << flow_bytes.at(f.first)
+		 << " gid " << src
+		 << "-" << active_flow_paths.at(f.first).back().second
+		 << "\n";
+       if (src == 0) af_uplink_0++;
+     }
+     std::cout << "at time " << curr_time << " " 
+	       << af_uplink_0 << " active flows on 0->\n";
 
+}
 void IdealSimulator::add_next_flow_to_active_flows() {
   std::cout << "add next flow to active flows " << next_flow << "\n";
   if (curr_time != next_start) {
@@ -185,8 +203,8 @@ void IdealSimulator::get_new_finish_times() {
     // rate is in gb/s, size is in bytes
     double rate = rates.at(f.first);
     double dur = (f.second * 8) / (rate * 1e9);
-    std::cout << "flow " << f.first << " would finish in "
-	      << dur << "\n";
+    //std::cout << "flow " << f.first << " would finish in "
+    //	      << dur << "\n";
     if (min_finish_dur == -1 or dur < min_finish_dur) {
       min_finish_dur = dur;
       min_finish_flow = f.first;
@@ -311,6 +329,7 @@ void IdealSimulator::run() {
      // will reset next finish and next start
      curr_time = next_start;
      add_next_flow_to_active_flows();
+     log_rates();
      std::cout << "next start " << next_flow << " at "
 	       << std::setprecision(12)
 	       << next_start << "\n";
@@ -376,6 +395,8 @@ void IdealSimulator::run() {
      // will reset next start and next finish
      add_next_flow_to_active_flows();
 
+     log_rates();
+
      std::cout << "next start " << next_flow << " at "
 	       << std::setprecision(12)
 	       << next_start << "\n";
@@ -386,6 +407,8 @@ void IdealSimulator::run() {
    } else {
      // will reset next finish
      remove_flows_that_have_finished();
+
+     log_rates();
 
      std::cout << "next start " << next_flow << " at "
 	       << std::setprecision(12)

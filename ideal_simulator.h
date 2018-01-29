@@ -48,7 +48,7 @@ class IdealSimulator {
   void drain_active_flows(double dur);
   void remove_flows_that_have_finished();
   void get_new_finish_times();
-
+  void log_rates();
  public:
   IdealSimulator(const std::string& flow_filename, 
 		 const std::string& out_filename,
