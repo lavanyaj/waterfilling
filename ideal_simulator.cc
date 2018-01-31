@@ -280,17 +280,21 @@ void IdealSimulator::remove_flows_that_have_finished()
     double fldur = curr_time - flow_start.at(f) ;
     int src = active_flow_paths.at(f).front().first;
     int dst = active_flow_paths.at(f).back().second;
+    // input file has bytes on the wire
+    double payload_bytes = (flow_bytes.at(f)/1500.0)*1460.0;
     out_file << "fid " << f 
 		<< std::setprecision(12)
 		<< " end_time " << curr_time
 		<< " start_time " << flow_start.at(f) 
 		<< " fldur " << fldur
 		<< std::setprecision(5)
-		<< " num_bytes " << flow_bytes.at(f)
+	     << " num_bytes " << flow_bytes.at(f)
 		<< " tmp_pkts " 
-		<< std::round(flow_bytes.at(f)/1460.0) 
+		<< std::round(flow_bytes.at(f)/1500.0) 
 		<< " gid "
 		<< src << "-" << dst
+	     << " payload_bytes "
+	     << payload_bytes
 		<< "\n";
     num_flows_removed++;
     active_flow_bytes.erase(f);
