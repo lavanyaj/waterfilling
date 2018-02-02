@@ -290,11 +290,9 @@ void IdealSimulator::remove_flows_that_have_finished()
 		<< std::setprecision(5)
 	     << " num_bytes " << flow_bytes.at(f)
 		<< " tmp_pkts " 
-		<< std::round(flow_bytes.at(f)/1500.0) 
+		<< std::round(flow_bytes.at(f)/1460.0) 
 		<< " gid "
 		<< src << "-" << dst
-	     << " payload_bytes "
-	     << payload_bytes
 		<< "\n";
     num_flows_removed++;
     active_flow_bytes.erase(f);
