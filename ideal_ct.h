@@ -14,7 +14,7 @@ class IdealSimulator {
 
   double min_bytes_for_priority_;
   double priority_weight_;
-
+  double max_sim_time_;
   //std::map<int, double> flow_arrivals;
   //std::map<int, std::vector< link_t > > flow_paths;
 
@@ -68,7 +68,8 @@ class IdealSimulator {
 		 const std::string& out_filename,
 		 const std::string& link_filename,
 		 double min_bytes_for_priority,
-		 double priority_weight);
+		 double priority_weight,
+		 double max_sim_time);
   ~IdealSimulator();
   void run();
 };
