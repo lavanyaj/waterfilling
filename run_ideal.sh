@@ -1,7 +1,9 @@
-export IDEAL_DIR="../ns2-cap-estimate-scripts/input_for_ideal-32"
+#export IDEAL_DIR="../ns2-cap-estimate-scripts/input_for_ideal-32"
+export IDEAL_DIR="/home/lavanyaj/waterfilling/input_for_ideal-144"
 link_file="links-100.txt"
 short_flow_bytes=1000000
 short_flow_prio=1
+max_sim_time=2.0
 
 FILES=$IDEAL_DIR/input*
 mkdir -p input_files
@@ -33,7 +35,7 @@ for f in $FILES ; do
   temperr="temp_files/err-${filename}"
   echo $infile
   echo "Running ideal for $f file..."
-  cmd="./wsim ${f} ${outfile} ${link_file} ${short_flow_bytes} ${short_flow_prio} 1> $tempout 2> $temperr &"
+  cmd="./wsim ${f} ${outfile} ${link_file} ${short_flow_bytes} ${short_flow_prio} ${max_sim_time} 1> $tempout 2> $temperr &"
   echo $cmd
   eval $cmd
   pids="$pids $!"

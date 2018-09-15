@@ -9,10 +9,12 @@ IdealSimulator::IdealSimulator(const std::string& flow_filename,
 				 const std::string& out_filename,
 			       const std::string& link_filename,
 			       double min_bytes_for_priority,
-			       double priority_weight):
+			       double priority_weight,
+			       double max_sim_time):
   flow_filename(flow_filename), out_filename(out_filename), link_filename(link_filename),
   flow_file(flow_filename), out_file(out_filename),
-  min_bytes_for_priority_(min_bytes_for_priority), priority_weight_(priority_weight) {
+  min_bytes_for_priority_(min_bytes_for_priority), priority_weight_(priority_weight),
+  max_sim_time_(max_sim_time) {
 
 if (not flow_file.is_open()) {
     std::cerr << "Unable to open file " << flow_filename << std::endl;
@@ -22,6 +24,11 @@ if (not flow_file.is_open()) {
 if (not out_file.is_open()) {
     std::cerr << "Unable to open file " << out_filename << std::endl;
    exit(1);
+}
+
+if (max_sim_time_ <= 0) {
+  std::cerr << "invalid max_sim_time " << max_sim_time_ << std::endl;
+  exit(1);
 }
 
 // parse link filename and initialize wf
@@ -345,7 +352,7 @@ void IdealSimulator::run() {
  double next_event_time = next_start;
 
  int num_events = 0;
- while ((next_start > 0 or next_finish > 0) and num_events < 500000) {
+ while ((next_start > 0 or next_finish > 0) and next_event_time < max_sim_time_) {
    num_events++;
    // see which event to simulate first
    // adding new flow or removing an old flow
@@ -420,9 +427,19 @@ void IdealSimulator::run() {
 	       << next_finish << "\n";
 
    }
+   if (next_event_time >= max_sim_time_) {
+     std::cout << "next_event_time " << next_event_time 
+	       << " exceeds max_sim_time_ " << max_sim_time_
+	       << std::endl;
+     break;
+
+   }
  }
 
 }
+
+
+
 
 
 
@@ -480,15 +497,15 @@ void IdealSimulator::run() {
 
 
 int main(int argc, char** argv) {
-  if (argc != 6) {
-    std::cerr << "Expected 5 arguments to binary- flow, out and link file, min bytes for priority, priority weight\n";
+  if (argc != 7) {
+    std::cerr << "Expected 6 arguments to binary- flow, out and link file, min bytes for priority, priority weight, max_sim_time\n";
     exit(1);
   }
   std::cout << "Got " << argv[1] << ", " << argv[2] << ", " << argv[3]
-	    << atof(argv[4]) << ", " << atof(argv[5])
+	    << atof(argv[4]) << ", " << atof(argv[5]) << ", " << atof(argv[6])
 	    << std::endl;
   //IdealSimulator sim("flow_file.txt","out_file.txt","link_file.txt");
   //IdealSimulator sim("all-topo0-80pc.txt","fcts-96-topo0-80pc.txt","l1-96.txt");
-  IdealSimulator sim(argv[1], argv[2], argv[3], atof(argv[4]), atof(argv[5]));
+  IdealSimulator sim(argv[1], argv[2], argv[3], atof(argv[4]), atof(argv[5]), atof(argv[6]));
   sim.run();
 }
