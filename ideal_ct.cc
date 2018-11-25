@@ -74,7 +74,7 @@ if (ss >> buf) {
 
 
  if (ss >> buf) {
-  num_bytes = atoi(buf.c_str());
+  num_bytes = atol(buf.c_str());
  } else {
 std::cerr << "couldn't get num_bytes from " << line << "\n";
 exit(1);
@@ -574,4 +574,5 @@ int main(int argc, char** argv) {
   //IdealSimulator sim("all-topo0-80pc.txt","fcts-96-topo0-80pc.txt","l1-96.txt");
   IdealSimulator sim(argv[1], argv[2], argv[3], atof(argv[4]), atof(argv[5]), atof(argv[6]));
   sim.run();
+  return 0;
 }
